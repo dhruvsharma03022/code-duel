@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen 6 - Leaderboard | CodeDuel Wireframe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .figma-frame {
+            width: 1440px;
+            height: 1024px;
+            background: #0a0e1a;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .figma-header {
+            position: absolute;
+            top: -35px;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 8px 16px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .frame-name {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .wireframe {
+            width: 100%;
+            height: 100%;
+            color: #e0e6ff;
+        }
+
+        /* Header */
+        .header {
+            background: #131826;
+            padding: 24px 60px;
+            border-bottom: 2px solid #1e2842;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #00ff88;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid #1e2842;
+            color: #e0e6ff;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Content */
+        .content {
+            padding: 60px 80px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .trophy-emoji {
+            font-size: 56px;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 600px;
+            margin: 40px auto;
+        }
+
+        .search-bar {
+            width: 100%;
+            background: #131826;
+            border: 2px solid #1e2842;
+            border-radius: 12px;
+            padding: 16px 24px;
+            font-size: 16px;
+            color: #e0e6ff;
+            outline: none;
+        }
+
+        .search-bar:focus {
+            border-color: #00ff88;
+        }
+
+        .search-bar::placeholder {
+            color: #4a5568;
+        }
+
+        /* Leaderboard Table */
+        .leaderboard-container {
+            background: #131826;
+            border: 2px solid #1e2842;
+            border-radius: 20px;
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .table-header {
+            background: #0a0e1a;
+            padding: 20px 32px;
+            display: grid;
+            grid-template-columns: 80px 1fr 120px 120px 100px;
+            gap: 24px;
+            font-weight: 700;
+            font-size: 13px;
+            color: #8892b0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #1e2842;
+        }
+
+        .table-row {
+            padding: 20px 32px;
+            display: grid;
+            grid-template-columns: 80px 1fr 120px 120px 100px;
+            gap: 24px;
+            border-bottom: 1px solid #1e2842;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .table-row:hover {
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .table-row.current-user {
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 4px solid #00ff88;
+            position: relative;
+        }
+
+        .rank {
+            font-weight: 800;
+            font-size: 18px;
+            color: #e0e6ff;
+        }
+
+        .rank.top-3 {
+            color: #ffaa00;
+            font-size: 24px;
+        }
+
+        .player-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #e0e6ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .star-icon {
+            color: #ffaa00;
+            font-size: 16px;
+        }
+
+        .rating {
+            font-weight: 700;
+            font-size: 18px;
+            color: #00ff88;
+        }
+
+        .matches {
+            color: #8892b0;
+            font-size: 14px;
+        }
+
+        .win-rate {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .win-rate.high {
+            color: #00ff88;
+        }
+
+        .win-rate.medium {
+            color: #ffaa00;
+        }
+
+        .win-rate.low {
+            color: #ff6b6b;
+        }
+
+        /* Load More */
+        .load-more-container {
+            text-align: center;
+            margin-top: 32px;
+        }
+
+        .load-more-btn {
+            background: #131826;
+            border: 2px solid #1e2842;
+            color: #e0e6ff;
+            padding: 14px 48px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .load-more-btn:hover {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        /* Grid Background */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .annotation {
+            position: absolute;
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="figma-frame">
+        <div class="figma-header">
+            <span class="frame-name">Screen 6 - Leaderboard</span>
+            <span style="margin-left: 8px; color: #999;">1440 × 1024</span>
+        </div>
+
+        <div class="wireframe">
+            <div class="grid-bg"></div>
+
+            <!-- Header -->
+            <div class="header">
+                <div class="logo">⚡ CodeDuel</div>
+                <button class="back-btn">← Back</button>
+            </div>
+
+            <!-- Content -->
+            <div class="content">
+                <h1 class="page-title">
+                    <span class="trophy-emoji">🏆</span>
+                    <span>Leaderboard</span>
+                </h1>
+
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <input type="text" class="search-bar" placeholder="Search players...">
+                </div>
+
+                <!-- Leaderboard Table -->
+                <div class="leaderboard-container">
+                    <div class="table-header">
+                        <div>#</div>
+                        <div>Player</div>
+                        <div>Rating</div>
+                        <div>Matches</div>
+                        <div>Win %</div>
+                    </div>
+
+                    <div class="table-row">
+                        <div class="rank top-3">1</div>
+                        <div class="player-name">CodeMaster_99</div>
+                        <div class="rating">2145</div>
+                        <div class="matches">234</div>
+                        <div class="win-rate high">78%</div>
+                    </div>
+
+                    <div class="table-row">
+                        <div class="rank top-3">2</div>
+                        <div class="player-name">AlgoQueen</div>
+                        <div class="rating">2098</div>
+                        <div class="matches">187</div>
+                        <div class="win-rate high">71%</div>
+                    </div>
+
+                    <div class="table-row">
+                        <div class="rank top-3">3</div>
+                        <div class="player-name">DevNinja_Pro</div>
+                        <div class="rating">1987</div>
+                        <div class="matches">156</div>
+                        <div class="win-rate high">68%</div>
+                    </div>
+
+                    <div class="table-row">
+                        <div class="rank">4</div>
+                        <div class="player-name">PythonPro</div>
+                        <div class="rating">1876</div>
+                        <div class="matches">142</div>
+                        <div class="win-rate medium">65%</div>
+                    </div>
+
+                    <div class="table-row">
+                        <div class="rank">5</div>
+                        <div class="player-name">JavaGenius</div>
+                        <div class="rating">1765</div>
+                        <div class="matches">128</div>
+                        <div class="win-rate medium">63%</div>
+                    </div>
+
+                    <div class="table-row">
+                        <div class="rank">6</div>
+                        <div class="player-name">CodeWarrior</div>
+                        <div class="rating">1698</div>
+                        <div class="matches">115</div>
+                        <div class="win-rate medium">62%</div>
+                    </div>
+
+                    <div class="table-row current-user">
+                        <div class="rank">47</div>
+                        <div class="player-name">
+                            <span>Alex_Codes</span>
+                            <span class="star-icon">⭐</span>
+                        </div>
+                        <div class="rating">1565</div>
+                        <div class="matches">23</div>
+                        <div class="win-rate medium">61%</div>
+                    </div>
+
+                    <div class="table-row">
+                        <div class="rank">48</div>
+                        <div class="player-name">RandomUser</div>
+                        <div class="rating">1558</div>
+                        <div class="matches">31</div>
+                        <div class="win-rate medium">60%</div>
+                    </div>
+
+                    <div class="table-row">
+                        <div class="rank">49</div>
+                        <div class="player-name">CodeNewbie</div>
+                        <div class="rating">1545</div>
+                        <div class="matches">19</div>
+                        <div class="win-rate low">58%</div>
+                    </div>
+
+                    <div class="table-row">
+                        <div class="rank">50</div>
+                        <div class="player-name">JSExpert</div>
+                        <div class="rating">1532</div>
+                        <div class="matches">27</div>
+                        <div class="win-rate low">57%</div>
+                    </div>
+                </div>
+
+                <!-- Load More -->
+                <div class="load-more-container">
+                    <button class="load-more-btn">Load More</button>
+                </div>
+            </div>
+
+            <!-- Annotations -->
+            <div class="annotation" style="top: 180px; left: 180px;">Search Function</div>
+            <div class="annotation" style="top: 420px; right: 180px;">Current User Highlighted</div>
+        </div>
+    </div>
+</body>
+</html>

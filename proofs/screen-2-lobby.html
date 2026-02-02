@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen 2 - Lobby | CodeDuel Wireframe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .figma-frame {
+            width: 1440px;
+            height: 1024px;
+            background: #0a0e1a;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .figma-header {
+            position: absolute;
+            top: -35px;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 8px 16px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .frame-name {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .frame-size {
+            color: #999;
+        }
+
+        /* Wireframe */
+        .wireframe {
+            width: 100%;
+            height: 100%;
+            color: #e0e6ff;
+        }
+
+        /* Top Bar */
+        .topbar {
+            background: #131826;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1e2842;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #00ff88;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-info {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .rating-badge {
+            background: #1e2842;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #2a3550;
+        }
+
+        .rating-number {
+            color: #00ff88;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #2a3550;
+            color: #e0e6ff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .content {
+            padding: 80px 60px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 80px;
+            color: #fff;
+        }
+
+        /* Action Cards */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            max-width: 1000px;
+            margin: 0 auto 40px;
+        }
+
+        .action-card {
+            background: #131826;
+            border: 2px solid #1e2842;
+            border-radius: 20px;
+            padding: 48px 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card:hover {
+            border-color: #00ff88;
+            transform: translateY(-4px);
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #00ff88;
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .action-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            font-size: 56px;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+
+        .card-description {
+            font-size: 16px;
+            color: #8892b0;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .card-button {
+            background: #00ff88;
+            color: #0a0e1a;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .leaderboard-card {
+            grid-column: 1 / -1;
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Grid background */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .annotation {
+            position: absolute;
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="figma-frame">
+        <div class="figma-header">
+            <span class="frame-name">Screen 2 - Lobby/Dashboard</span>
+            <span class="frame-size">1440 × 1024</span>
+        </div>
+
+        <div class="wireframe">
+            <div class="grid-bg"></div>
+
+            <!-- Top Bar -->
+            <div class="topbar">
+                <div class="logo">⚡ CodeDuel</div>
+                <div class="user-info">
+                    <div class="rating-badge">
+                        <span>Rating:</span>
+                        <span class="rating-number">1547</span>
+                    </div>
+                    <div class="rating-badge">
+                        <span>👤 Alex_Codes</span>
+                    </div>
+                    <button class="logout-btn">Logout</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="content">
+                <h1 class="title">Ready to Battle?</h1>
+
+                <div class="action-grid">
+                    <!-- Create Invite Card -->
+                    <div class="action-card">
+                        <div class="card-icon">🔗</div>
+                        <h3 class="card-title">Create Invite</h3>
+                        <p class="card-description">
+                            Generate a unique link and challenge a specific friend
+                        </p>
+                        <button class="card-button">Create Link</button>
+                    </div>
+
+                    <!-- Quick Match Card -->
+                    <div class="action-card">
+                        <div class="card-icon">⚔️</div>
+                        <h3 class="card-title">Quick Match</h3>
+                        <p class="card-description">
+                            Get matched instantly with an opponent of similar skill
+                        </p>
+                        <button class="card-button">Find Match</button>
+                    </div>
+
+                    <!-- Leaderboard Card -->
+                    <div class="action-card leaderboard-card">
+                        <div class="card-icon">🏆</div>
+                        <h3 class="card-title">Leaderboard</h3>
+                        <p class="card-description">
+                            View top coders and check your ranking
+                        </p>
+                        <button class="card-button">View Rankings</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Annotations -->
+            <div class="annotation" style="top: 100px; right: 100px;">User Profile</div>
+            <div class="annotation" style="bottom: 150px; left: 150px;">Action Cards</div>
+        </div>
+    </div>
+</body>
+</html>

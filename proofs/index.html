@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeDuel Wireframes - Figma Screens</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 60px 40px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+
+        .info {
+            font-size: 16px;
+            opacity: 0.8;
+            background: rgba(255,255,255,0.1);
+            padding: 16px 32px;
+            border-radius: 12px;
+            display: inline-block;
+            backdrop-filter: blur(10px);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 32px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .card-content {
+            padding: 32px;
+        }
+
+        .card-number {
+            font-size: 14px;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+
+        .card-description {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .view-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .view-btn:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+
+        .footer {
+            margin-top: 80px;
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+        }
+
+        .footer p {
+            margin-bottom: 8px;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                font-size: 36px;
+            }
+
+            .subtitle {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <span>⚡</span>
+                <span>CodeDuel Wireframes</span>
+            </div>
+            <p class="subtitle">High-Fidelity UI/UX Design Screens</p>
+            <p class="info">📱 6 Professional Wireframe Screens | Created for Digital Assignment 1</p>
+        </div>
+
+        <div class="grid">
+            <!-- Screen 1 -->
+            <div class="card" onclick="window.location.href='screen-1-landing.html'">
+                <div class="card-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    🏠
+                </div>
+                <div class="card-content">
+                    <div class="card-number">SCREEN 1</div>
+                    <h3 class="card-title">Landing / Login Page</h3>
+                    <p class="card-description">
+                        First impression page with hero section, feature highlights, and authentication options. 
+                        Includes gradient background with grid overlay.
+                    </p>
+                    <a href="screen-1-landing.html" class="view-btn">
+                        <span>View Screen</span>
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Screen 2 -->
+            <div class="card" onclick="window.location.href='screen-2-lobby.html'">
+                <div class="card-image" style="background: linear-gradient(135deg, #0a0e1a 0%, #1e2842 100%);">
+                    🎮
+                </div>
+                <div class="card-content">
+                    <div class="card-number">SCREEN 2</div>
+                    <h3 class="card-title">Lobby / Dashboard</h3>
+                    <p class="card-description">
+                        Main hub after login with action cards for creating invites, quick match, and viewing leaderboard. 
+                        Dark theme with user profile display.
+                    </p>
+                    <a href="screen-2-lobby.html" class="view-btn">
+                        <span>View Screen</span>
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Screen 3 -->
+            <div class="card" onclick="window.location.href='screen-3-invite-modal.html'">
+                <div class="card-image" style="background: linear-gradient(135deg, #0a0e1a 0%, #00ff88 20%);">
+                    🔗
+                </div>
+                <div class="card-content">
+                    <div class="card-number">SCREEN 3</div>
+                    <h3 class="card-title">Invite Modal</h3>
+                    <p class="card-description">
+                        Modal overlay for creating and sharing invite links. Features copy-to-clipboard functionality 
+                        and expiry timer with glassmorphism effects.
+                    </p>
+                    <a href="screen-3-invite-modal.html" class="view-btn">
+                        <span>View Screen</span>
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Screen 4 -->
+            <div class="card" onclick="window.location.href='screen-4-match-arena.html'">
+                <div class="card-image" style="background: linear-gradient(135deg, #0d1117 0%, #1e2842 100%);">
+                    💻
+                </div>
+                <div class="card-content">
+                    <div class="card-number">SCREEN 4</div>
+                    <h3 class="card-title">Match Arena</h3>
+                    <p class="card-description">
+                        Live coding battle interface with split view showing problem description and code editor. 
+                        Includes syntax highlighting and real-time opponent status.
+                    </p>
+                    <a href="screen-4-match-arena.html" class="view-btn">
+                        <span>View Screen</span>
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Screen 5 -->
+            <div class="card" onclick="window.location.href='screen-5-victory.html'">
+                <div class="card-image" style="background: linear-gradient(135deg, #00ff88 0%, #00aaff 100%);">
+                    🏆
+                </div>
+                <div class="card-content">
+                    <div class="card-number">SCREEN 5</div>
+                    <h3 class="card-title">Victory Screen</h3>
+                    <p class="card-description">
+                        Celebratory screen showing match results with animated trophy, rating changes, and confetti effects. 
+                        Displays solve time and new ELO rating.
+                    </p>
+                    <a href="screen-5-victory.html" class="view-btn">
+                        <span>View Screen</span>
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Screen 6 -->
+            <div class="card" onclick="window.location.href='screen-6-leaderboard.html'">
+                <div class="card-image" style="background: linear-gradient(135deg, #0a0e1a 0%, #ffaa00 20%);">
+                    📊
+                </div>
+                <div class="card-content">
+                    <div class="card-number">SCREEN 6</div>
+                    <h3 class="card-title">Leaderboard</h3>
+                    <p class="card-description">
+                        Global rankings table with search functionality. Shows player stats including rating, matches, 
+                        and win percentage with current user highlighted.
+                    </p>
+                    <a href="screen-6-leaderboard.html" class="view-btn">
+                        <span>View Screen</span>
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>CodeDuel - Real-Time 1v1 Competitive Coding Platform</strong></p>
+            <p>Created for Digital Assignment 1 | UI/UX Wireframes</p>
+            <p>These wireframes demonstrate the complete user flow from landing to match completion</p>
+            <br>
+            <p style="font-size: 12px; opacity: 0.6;">
+                💡 Tip: Open each screen in full screen for best viewing experience<br>
+                📸 Take screenshots at 1440×1024 resolution for submission
+            </p>
+        </div>
+    </div>
+</body>
+</html>
