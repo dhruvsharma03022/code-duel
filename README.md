@@ -1,6 +1,5 @@
 # CodeDuel - Real-Time 1v1 Competitive Coding Platform
 
-![CodeDuel Banner](https://via.placeholder.com/1200x300/0a0e1a/00ff88?text=CodeDuel+-+1v1+Competitive+Coding)
 
 ## 📋 Table of Contents
 - [Project Overview](#project-overview)

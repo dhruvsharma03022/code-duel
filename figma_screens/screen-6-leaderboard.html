@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeDuel - 1v1 Competitive Coding</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --secondary: #764ba2;
+            --accent: #00ff88;
+            --bg-light: #f4f5f7;
+            --bg-card: #ffffff;
+            --text: #1a202c;
+            --text-dim: #4a5568;
+            --border: #e2e8f0;
+            --success: #00ff88;
+            --error: #ff0055;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .app {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Animated background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .glow-orb {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.2;
+            z-index: 0;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .glow-orb-1 {
+            background: rgba(255, 255, 255, 0.3);
+            top: -200px;
+            right: -200px;
+        }
+
+        .glow-orb-2 {
+            background: rgba(255, 255, 255, 0.2);
+            bottom: -200px;
+            left: -200px;
+            animation-delay: -7s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -30px) scale(1.1); }
+        }
+
+        /* Header */
+        .header {
+            position: relative;
+            z-index: 10;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .rating-badge {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .rating-number {
+            color: var(--primary);
+            font-size: 1.125rem;
+        }
+
+        /* Main content */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Screen transitions */
+        .screen {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Lobby Screen */
+        .lobby-hero {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .lobby-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: white;
+            line-height: 1.2;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .lobby-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .action-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .action-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .card-description {
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Invite Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .invite-link-container {
+            background: var(--bg-light);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .invite-link {
+            flex: 1;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .copy-btn {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+        }
+
+        .modal-footer {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Match Arena */
+        .match-header {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .match-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .players {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .player {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .player-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .player-details h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .player-rating {
+            color: var(--text-dim);
+            font-size: 0.875rem;
+        }
+
+        .vs-badge {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 0.5rem 1.25rem;
+            border-radius: 100px;
+            font-weight: 700;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: rgba(102, 126, 234, 0.1);
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+        }
+
+        .arena-grid {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 2rem;
+            height: calc(100vh - 250px);
+        }
+
+        .problem-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .problem-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .difficulty-medium {
+            background: rgba(255, 170, 0, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(255, 170, 0, 0.3);
+        }
+
+        .problem-description {
+            color: var(--text-dim);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .examples {
+            margin-top: 2rem;
+        }
+
+        .example {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+        }
+
+        .example-label {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .editor-container {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            overflow: hidden;
+            flex: 1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .editor-header {
+            background: var(--bg-light);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .language-select {
+            background: white;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.875rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .code-editor {
+            height: 100%;
+            background: #1e293b;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: #e2e8f0;
+            border: none;
+            outline: none;
+            resize: none;
+            line-height: 1.6;
+        }
+
+        .submit-bar {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-status {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        .status-icon {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-waiting { background: var(--text-dim); }
+        .status-passed { background: var(--success); }
+        .status-failed { background: var(--error); }
+
+        /* Victory Screen */
+        .victory-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }
+
+        .victory-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            padding: 4rem;
+            text-align: center;
+            max-width: 600px;
+            animation: victoryPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes victoryPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .trophy-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            animation: trophyFloat 3s ease-in-out infinite;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        @keyframes trophyFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .victory-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .victory-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            margin-bottom: 3rem;
+        }
+
+        .rating-change {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .rating-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .rating-change-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .victory-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Simple Icon Components
+        const Icon = ({ children, size = 24 }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                {children}
+            </svg>
+        );
+
+        const Swords = ({ size }) => (
+            <Icon size={size}>
+                <path d="M14.5 17.5 3 6V3h3l11.5 11.5" />
+                <path d="M13 19 9 15" />
+                <path d="m16 16 5-5" />
+                <path d="m19 21 2-2" />
+                <path d="M14.5 6.5 18 3h3v3l-3.5 3.5" />
+                <path d="M5 14 9 18" />
+                <path d="m8 8-5 5" />
+                <path d="m3 3 2 2" />
+            </Icon>
+        );
+
+        const Link = ({ size }) => (
+            <Icon size={size}>
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+            </Icon>
+        );
+
+        const Trophy = ({ size }) => (
+            <Icon size={size}>
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                <path d="M4 22h16" />
+                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+            </Icon>
+        );
+
+        const Clock = ({ size }) => (
+            <Icon size={size}>
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+            </Icon>
+        );
+
+        const User = ({ size }) => (
+            <Icon size={size}>
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+            </Icon>
+        );
+
+        const Target = ({ size }) => (
+            <Icon size={size}>
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="6" />
+                <circle cx="12" cy="12" r="2" />
+            </Icon>
+        );
+
+        const Play = ({ size }) => (
+            <Icon size={size}>
+                <polygon points="5 3 19 12 5 21 5 3" />
+            </Icon>
+        );
+
+        const CheckCircle = ({ size }) => (
+            <Icon size={size}>
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+            </Icon>
+        );
+
+        const Zap = ({ size }) => (
+            <Icon size={size}>
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </Icon>
+        );
+
+        function App() {
+            const [screen, setScreen] = useState('lobby'); // lobby, waiting, match, victory
+            const [showInviteModal, setShowInviteModal] = useState(false);
+            const [copiedInvite, setCopiedInvite] = useState(false);
+
+            const inviteLink = "https://codeduel.io/invite/abc123xyz";
+
+            const copyInviteLink = () => {
+                navigator.clipboard.writeText(inviteLink);
+                setCopiedInvite(true);
+                setTimeout(() => setCopiedInvite(false), 2000);
+            };
+
+            return (
+                <div className="app">
+                    <div className="bg-grid"></div>
+                    <div className="glow-orb glow-orb-1"></div>
+                    <div className="glow-orb glow-orb-2"></div>
+
+                    <header className="header">
+                        <div className="header-content">
+                            <div className="logo">⚡ CodeDuel</div>
+                            <div className="user-info">
+                                <div className="rating-badge">
+                                    <Target size={18} />
+                                    <span>Rating:</span>
+                                    <span className="rating-number">1547</span>
+                                </div>
+                                <div className="rating-badge">
+                                    <User size={18} />
+                                    <span>Alex_Codes</span>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <main className="main-content">
+                        {screen === 'lobby' && <LobbyScreen setScreen={setScreen} setShowInviteModal={setShowInviteModal} />}
+                        {screen === 'match' && <MatchScreen setScreen={setScreen} />}
+                        {screen === 'victory' && <VictoryScreen setScreen={setScreen} />}
+                    </main>
+
+                    {showInviteModal && (
+                        <div className="modal-overlay" onClick={() => setShowInviteModal(false)}>
+                            <div className="modal" onClick={e => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <h2 className="modal-title">Create Invite Link</h2>
+                                    <p style={{color: 'var(--text-dim)'}}>Share this link with your opponent to start a match</p>
+                                </div>
+                                <div className="invite-link-container">
+                                    <span className="invite-link">{inviteLink}</span>
+                                    <button className="copy-btn" onClick={copyInviteLink}>
+                                        {copiedInvite ? 'Copied!' : 'Copy'}
+                                    </button>
+                                </div>
+                                <div className="modal-footer">
+                                    <button className="btn btn-secondary" style={{flex: 1}} onClick={() => setShowInviteModal(false)}>
+                                        Cancel
+                                    </button>
+                                    <button className="btn btn-primary" style={{flex: 1}} onClick={() => { setShowInviteModal(false); setScreen('match'); }}>
+                                        Start Match
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function LobbyScreen({ setScreen, setShowInviteModal }) {
+            return (
+                <div className="screen">
+                    <div className="lobby-hero">
+                        <h1 className="lobby-title">Ready to Battle?</h1>
+                        <p className="lobby-subtitle">Challenge developers worldwide in real-time coding duels</p>
+                    </div>
+
+                    <div className="action-cards">
+                        <div className="action-card" onClick={() => setShowInviteModal(true)}>
+                            <div className="card-icon">
+                                <Link size={30} />
+                            </div>
+                            <h3 className="card-title">Create Invite</h3>
+                            <p className="card-description">
+                                Generate a unique link and challenge a specific opponent to a coding duel
+                            </p>
+                        </div>
+
+                        <div className="action-card" onClick={() => setScreen('match')}>
+                            <div className="card-icon">
+                                <Swords size={30} />
+                            </div>
+                            <h3 className="card-title">Quick Match</h3>
+                            <p className="card-description">
+                                Get instantly matched with an opponent of similar rating for a fast-paced battle
+                            </p>
+                        </div>
+
+                        <div className="action-card">
+                            <div className="card-icon">
+                                <Trophy size={30} />
+                            </div>
+                            <h3 className="card-title">Leaderboard</h3>
+                            <p className="card-description">
+                                View top coders, track your ranking, and see your match history
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function MatchScreen({ setScreen }) {
+            const [timeLeft, setTimeLeft] = useState(895);
+            const [code, setCode] = useState('function twoSum(nums, target) {\n    // Your code here\n    \n}');
+
+            return (
+                <div className="screen">
+                    <div className="match-header">
+                        <div className="match-info">
+                            <div className="players">
+                                <div className="player">
+                                    <div className="player-avatar">A</div>
+                                    <div className="player-details">
+                                        <h3>Alex_Codes</h3>
+                                        <p className="player-rating">Rating: 1547</p>
+                                    </div>
+                                </div>
+                                <div className="vs-badge">VS</div>
+                                <div className="player">
+                                    <div className="player-avatar" style={{background: 'linear-gradient(135deg, #ff0055, #ff6600)'}}>S</div>
+                                    <div className="player-details">
+                                        <h3>Sarah_Dev</h3>
+                                        <p className="player-rating">Rating: 1523</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="timer">
+                                <Clock size={24} />
+                                {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="arena-grid">
+                        <div className="problem-panel">
+                            <h2 className="problem-title">Two Sum</h2>
+                            <span className="difficulty-badge difficulty-medium">Medium</span>
+                            
+                            <p className="problem-description">
+                                Given an array of integers nums and an integer target, return indices of the 
+                                two numbers such that they add up to target. You may assume that each input 
+                                would have exactly one solution, and you may not use the same element twice.
+                            </p>
+
+                            <div className="examples">
+                                <h4 style={{marginBottom: '1rem', color: 'var(--primary)'}}>Examples:</h4>
+                                <div className="example">
+                                    <div className="example-label">Example 1:</div>
+                                    <div>Input: nums = [2,7,11,15], target = 9</div>
+                                    <div>Output: [0,1]</div>
+                                    <div style={{marginTop: '0.5rem', color: 'var(--text-dim)'}}>
+                                        Explanation: nums[0] + nums[1] = 2 + 7 = 9
+                                    </div>
+                                </div>
+                                <div className="example">
+                                    <div className="example-label">Example 2:</div>
+                                    <div>Input: nums = [3,2,4], target = 6</div>
+                                    <div>Output: [1,2]</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="code-panel">
+                            <div className="editor-container">
+                                <div className="editor-header">
+                                    <select className="language-select">
+                                        <option>JavaScript</option>
+                                        <option>Python</option>
+                                        <option>Java</option>
+                                        <option>C++</option>
+                                    </select>
+                                    <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
+                                        <span style={{fontSize: '0.875rem', color: 'var(--text-dim)'}}>
+                                            <Zap size={14} style={{display: 'inline', marginRight: '0.25rem'}} />
+                                            Opponent typing...
+                                        </span>
+                                    </div>
+                                </div>
+                                <textarea 
+                                    className="code-editor" 
+                                    value={code}
+                                    onChange={(e) => setCode(e.target.value)}
+                                    spellCheck="false"
+                                />
+                            </div>
+
+                            <div className="submit-bar">
+                                <div className="test-status">
+                                    <div className="status-item">
+                                        <div className="status-icon status-waiting"></div>
+                                        Test 1
+                                    </div>
+                                    <div className="status-item">
+                                        <div className="status-icon status-waiting"></div>
+                                        Test 2
+                                    </div>
+                                    <div className="status-item">
+                                        <div className="status-icon status-waiting"></div>
+                                        Test 3
+                                    </div>
+                                </div>
+                                <div style={{display: 'flex', gap: '1rem'}}>
+                                    <button className="btn btn-secondary">
+                                        <Play size={18} />
+                                        Run Tests
+                                    </button>
+                                    <button className="btn btn-primary" onClick={() => setScreen('victory')}>
+                                        <CheckCircle size={18} />
+                                        Submit Solution
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function VictoryScreen({ setScreen }) {
+            return (
+                <div className="screen victory-screen">
+                    <div className="victory-card">
+                        <div className="trophy-icon">
+                            🏆
+                        </div>
+                        <h1 className="victory-title">Victory!</h1>
+                        <p className="victory-subtitle">You solved the problem in 4:23</p>
+                        
+                        <div className="rating-change">
+                            <div className="rating-row">
+                                <span style={{color: 'var(--text-dim)'}}>Previous Rating</span>
+                                <span style={{fontSize: '1.25rem', fontWeight: 600}}>1547</span>
+                            </div>
+                            <div className="rating-row">
+                                <span style={{color: 'var(--text-dim)'}}>Rating Change</span>
+                                <span className="rating-change-value">+18</span>
+                            </div>
+                            <div className="rating-row" style={{marginBottom: 0, paddingTop: '1rem', borderTop: '1px solid var(--border)'}}>
+                                <span style={{fontWeight: 600}}>New Rating</span>
+                                <span style={{fontSize: '1.5rem', fontWeight: 700, color: 'var(--primary)'}}>1565</span>
+                            </div>
+                        </div>
+
+                        <div className="victory-actions">
+                            <button className="btn btn-secondary" onClick={() => setScreen('lobby')}>
+                                Back to Lobby
+                            </button>
+                            <button className="btn btn-primary" onClick={() => setScreen('lobby')}>
+                                <Swords size={18} />
+                                New Match
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
