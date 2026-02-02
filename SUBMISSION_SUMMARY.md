@@ -3,11 +3,11 @@
 ## Project: CodeDuel - Real-Time 1v1 Competitive Coding Platform
 
 ### Submission Date: January 2026
-### Team: [Your Team Name]
+
 
 ---
 
-## ✅ Deliverables Checklist
+## Deliverables Checklist
 
 ### 1. Vision Document ✓
 **Location**: `README.md`
