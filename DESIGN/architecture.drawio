@@ -1,0 +1,191 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.6.0">
+  <diagram name="CodeDuel Architecture" id="architecture">
+    <mxGraphModel dx="1097" dy="592" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" value="CodeDuel - System Architecture" vertex="1">
+          <mxGeometry height="40" width="400" x="400" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="frontend-container" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1" value="Frontend Layer" vertex="1">
+          <mxGeometry height="200" width="280" x="80" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="react" parent="frontend-container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12" value="React 18&#xa;+ Vite" vertex="1">
+          <mxGeometry height="50" width="100" x="40" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="monaco" parent="frontend-container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12" value="Monaco&#xa;Editor" vertex="1">
+          <mxGeometry height="50" width="100" x="160" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="socketio-client" parent="frontend-container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12" value="Socket.io&#xa;Client" vertex="1">
+          <mxGeometry height="50" width="100" x="40" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="tailwind" parent="frontend-container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12" value="Tailwind&#xa;CSS" vertex="1">
+          <mxGeometry height="50" width="100" x="160" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="backend-container" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1" value="Backend Layer" vertex="1">
+          <mxGeometry height="200" width="280" x="440" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="express" parent="backend-container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12" value="Express.js&#xa;REST API" vertex="1">
+          <mxGeometry height="50" width="100" x="40" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="socketio-server" parent="backend-container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12" value="Socket.io&#xa;Server" vertex="1">
+          <mxGeometry height="50" width="100" x="160" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="auth" parent="backend-container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12" value="JWT Auth&#xa;Middleware" vertex="1">
+          <mxGeometry height="50" width="100" x="40" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="rating" parent="backend-container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12" value="ELO Rating&#xa;Service" vertex="1">
+          <mxGeometry height="50" width="100" x="160" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="data-container" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1" value="Data Layer" vertex="1">
+          <mxGeometry height="200" width="280" x="800" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="postgres" parent="data-container" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12" value="PostgreSQL&#xa;Database" vertex="1">
+          <mxGeometry height="70" width="100" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="redis" parent="data-container" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12" value="Redis&#xa;Cache" vertex="1">
+          <mxGeometry height="70" width="100" x="160" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="external-container" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontStyle=1" value="External Services" vertex="1">
+          <mxGeometry height="120" width="280" x="440" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="piston" parent="external-container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5d5d5;strokeColor=#666666;fontSize=12" value="Piston API&#xa;Code Execution" vertex="1">
+          <mxGeometry height="50" width="100" x="90" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="deploy-container" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1" value="Deployment" vertex="1">
+          <mxGeometry height="120" width="280" x="80" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="docker" parent="deploy-container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1d7b4;strokeColor=#56ab5c;fontSize=12" value="Docker&#xa;Containers" vertex="1">
+          <mxGeometry height="50" width="90" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vercel" parent="deploy-container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1d7b4;strokeColor=#56ab5c;fontSize=12" value="Vercel&#xa;(Frontend)" vertex="1">
+          <mxGeometry height="50" width="90" x="150" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="cloud-container" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;fontSize=14;fontStyle=1" value="Cloud Infrastructure" vertex="1">
+          <mxGeometry height="120" width="280" x="800" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="railway" parent="cloud-container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffc966;strokeColor=#d79b00;fontSize=12" value="Railway&#xa;(Backend)" vertex="1">
+          <mxGeometry height="50" width="90" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="supabase" parent="cloud-container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffc966;strokeColor=#d79b00;fontSize=12" value="Supabase&#xa;(Database)" vertex="1">
+          <mxGeometry height="50" width="90" x="150" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow1" edge="1" parent="1" source="react" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#0066CC;" target="express">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow1-label" connectable="0" parent="arrow1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#0066CC;" value="HTTP/REST" vertex="1">
+          <mxGeometry relative="1" x="-0.1" y="1" as="geometry">
+            <mxPoint x="63" y="-14" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow2" edge="1" parent="1" source="socketio-client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#00CC66;" target="socketio-server">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow2-label" connectable="0" parent="arrow2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#00CC66;" value="WebSocket" vertex="1">
+          <mxGeometry relative="1" x="-0.1" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow3" edge="1" parent="1" source="express" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#CC0000;" target="postgres">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow3-label" connectable="0" parent="arrow3" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#CC0000;" value="SQL Query" vertex="1">
+          <mxGeometry relative="1" x="-0.1" y="1" as="geometry">
+            <mxPoint x="44" y="6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow5" edge="1" parent="1" source="express" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9900CC;" target="piston">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="530" y="320" />
+              <mxPoint x="530" y="435" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow5-label" connectable="0" parent="arrow5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#9900CC;" value="Code Execute" vertex="1">
+          <mxGeometry relative="1" x="-0.1" y="1" as="geometry">
+            <mxPoint x="-41" y="42" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend-container" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontStyle=1" value="Legend" vertex="1">
+          <mxGeometry height="180" width="200" x="80" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="legend1" edge="1" parent="legend-container" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#0066CC;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="20" y="40" as="sourcePoint" />
+            <mxPoint x="80" y="40" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend1-text" parent="legend-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="HTTP/REST" vertex="1">
+          <mxGeometry height="20" width="100" x="90" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="legend2" edge="1" parent="legend-container" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#00CC66;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="20" y="70" as="sourcePoint" />
+            <mxPoint x="80" y="70" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend2-text" parent="legend-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="WebSocket" vertex="1">
+          <mxGeometry height="20" width="100" x="90" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="legend3" edge="1" parent="legend-container" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#CC0000;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="20" y="100" as="sourcePoint" />
+            <mxPoint x="80" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend3-text" parent="legend-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="Database Query" vertex="1">
+          <mxGeometry height="20" width="100" x="90" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="legend4" edge="1" parent="legend-container" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#FF6600;dashed=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="20" y="130" as="sourcePoint" />
+            <mxPoint x="80" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend4-text" parent="legend-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="Cache" vertex="1">
+          <mxGeometry height="20" width="100" x="90" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="features-container" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1f5fe;strokeColor=#01579b;fontSize=12;fontStyle=1" value="Key Features" vertex="1">
+          <mxGeometry height="180" width="240" x="320" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="feature1" parent="features-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="✓ Real-time 1v1 Matches" vertex="1">
+          <mxGeometry height="20" width="220" x="10" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="feature2" parent="features-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="✓ Automated Code Execution" vertex="1">
+          <mxGeometry height="20" width="220" x="10" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="feature3" parent="features-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="✓ ELO Rating System" vertex="1">
+          <mxGeometry height="20" width="220" x="10" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="feature4" parent="features-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="✓ Invite Link Matchmaking" vertex="1">
+          <mxGeometry height="20" width="220" x="10" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="feature5" parent="features-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="✓ Multi-language Support" vertex="1">
+          <mxGeometry height="20" width="220" x="10" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="tech-container" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;fontSize=12;fontStyle=1" value="Tech Stack" vertex="1">
+          <mxGeometry height="180" width="240" x="600" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="tech1" parent="tech-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="Frontend: React 18 + Vite" vertex="1">
+          <mxGeometry height="20" width="220" x="10" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="tech2" parent="tech-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="Backend: Node.js + Express" vertex="1">
+          <mxGeometry height="20" width="220" x="10" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="tech3" parent="tech-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="Database: PostgreSQL 14" vertex="1">
+          <mxGeometry height="20" width="220" x="10" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tech4" parent="tech-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="Cache: Redis 6" vertex="1">
+          <mxGeometry height="20" width="220" x="10" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="tech5" parent="tech-container" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="Deploy: Docker + Vercel + Railway" vertex="1">
+          <mxGeometry height="20" width="220" x="10" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="footer" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=10;fontColor=#666666;" value="CodeDuel Architecture v1.0 | January 2026" vertex="1">
+          <mxGeometry height="20" width="400" x="400" y="780" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
