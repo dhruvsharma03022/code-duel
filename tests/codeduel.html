@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeDuel — 1v1 Competitive Coding</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg2: #0f1526;
+    --bg3: #151c30;
+    --bg4: #1a2340;
+    --green: #00ff88;
+    --green2: #00cc6a;
+    --blue: #4d9fff;
+    --red: #ff4d6a;
+    --yellow: #ffd93d;
+    --text: #e8eaf2;
+    --text2: #8892aa;
+    --text3: #4a5568;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --radius: 12px;
+    --mono: 'JetBrains Mono', monospace;
+    --display: 'Syne', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--display); min-height: 100vh; overflow-x: hidden; }
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ===== NAV ===== */
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(10,14,26,0.92); backdrop-filter: blur(12px); z-index: 100; }
+  .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
+  .logo span { color: var(--green); }
+  .nav-links { display: flex; gap: 0.5rem; align-items: center; }
+  .nav-user { display: flex; align-items: center; gap: 0.75rem; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--bg3); border: 1.5px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--green); }
+  .elo-badge { background: var(--bg3); border: 1px solid var(--border2); padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.78rem; color: var(--yellow); font-family: var(--mono); }
+
+  /* ===== BUTTONS ===== */
+  .btn { font-family: var(--display); font-weight: 600; font-size: 0.9rem; padding: 0.6rem 1.4rem; border-radius: 8px; border: none; cursor: pointer; transition: all 0.15s; letter-spacing: 0.02em; }
+  .btn-primary { background: var(--green); color: #0a0e1a; }
+  .btn-primary:hover { background: var(--green2); transform: translateY(-1px); }
+  .btn-outline { background: transparent; border: 1.5px solid var(--border2); color: var(--text); }
+  .btn-outline:hover { border-color: var(--green); color: var(--green); }
+  .btn-ghost { background: transparent; border: none; color: var(--text2); font-size: 0.85rem; padding: 0.4rem 0.8rem; }
+  .btn-ghost:hover { color: var(--text); }
+  .btn-danger { background: transparent; border: 1.5px solid var(--red); color: var(--red); }
+  .btn-danger:hover { background: rgba(255,77,106,0.1); }
+  .btn-lg { padding: 0.85rem 2rem; font-size: 1rem; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+  /* ===== LANDING ===== */
+  #landing { background: var(--bg); }
+  .hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4rem 2rem; position: relative; }
+  .hero::before { content: ''; position: absolute; top: 10%; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(0,255,136,0.05) 0%, transparent 70%); pointer-events: none; }
+  .hero-tag { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); color: var(--green); padding: 0.3rem 1rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1.5rem; display: inline-block; }
+  .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; margin-bottom: 1.25rem; }
+  .hero h1 .accent { color: var(--green); }
+  .hero p { font-size: 1.1rem; color: var(--text2); max-width: 500px; line-height: 1.7; margin-bottom: 2.5rem; font-weight: 400; }
+  .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+  .stats-row { display: flex; gap: 3rem; margin-top: 5rem; flex-wrap: wrap; justify-content: center; }
+  .stat-item { text-align: center; }
+  .stat-num { font-size: 2rem; font-weight: 800; color: var(--green); font-family: var(--mono); }
+  .stat-label { font-size: 0.8rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.2rem; }
+
+  /* ===== AUTH MODAL ===== */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--bg2); border: 1px solid var(--border2); border-radius: 16px; padding: 2rem; width: 100%; max-width: 420px; position: relative; }
+  .modal h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 0.4rem; }
+  .modal .sub { color: var(--text2); font-size: 0.88rem; margin-bottom: 1.75rem; }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label { display: block; font-size: 0.82rem; color: var(--text2); margin-bottom: 0.5rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+  .form-group input { width: 100%; background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; padding: 0.7rem 1rem; color: var(--text); font-family: var(--display); font-size: 0.95rem; outline: none; transition: border-color 0.15s; }
+  .form-group input:focus { border-color: var(--green); }
+  .modal-footer { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .modal-switch { text-align: center; font-size: 0.85rem; color: var(--text2); }
+  .modal-switch a { color: var(--green); cursor: pointer; text-decoration: none; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text2); font-size: 1.2rem; cursor: pointer; line-height: 1; }
+
+  /* ===== DASHBOARD ===== */
+  #dashboard { background: var(--bg); }
+  .dash-body { flex: 1; display: grid; grid-template-columns: 280px 1fr; gap: 0; }
+  .sidebar { background: var(--bg2); border-right: 1px solid var(--border); padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+  .profile-card { background: var(--bg3); border-radius: var(--radius); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; text-align: center; }
+  .profile-avatar-lg { width: 64px; height: 64px; border-radius: 50%; background: var(--bg4); border: 2.5px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; color: var(--green); }
+  .profile-name { font-weight: 700; font-size: 1.05rem; }
+  .profile-handle { color: var(--text2); font-size: 0.82rem; font-family: var(--mono); }
+  .elo-display { background: rgba(0,255,136,0.07); border: 1px solid rgba(0,255,136,0.2); border-radius: 8px; padding: 0.5rem 1rem; font-family: var(--mono); font-size: 1.1rem; font-weight: 600; color: var(--green); }
+  .profile-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; width: 100%; }
+  .ps-item { background: var(--bg4); border-radius: 8px; padding: 0.5rem; text-align: center; }
+  .ps-val { font-size: 1.1rem; font-weight: 700; font-family: var(--mono); }
+  .ps-key { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; }
+  .sidebar-section { }
+  .sidebar-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text3); margin-bottom: 0.75rem; font-weight: 600; }
+  .leaderboard-list { display: flex; flex-direction: column; gap: 0.4rem; }
+  .lb-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 8px; background: var(--bg3); }
+  .lb-rank { font-family: var(--mono); font-size: 0.75rem; color: var(--text3); width: 18px; text-align: center; }
+  .lb-rank.gold { color: var(--yellow); }
+  .lb-name { flex: 1; font-size: 0.85rem; font-weight: 600; }
+  .lb-elo { font-family: var(--mono); font-size: 0.78rem; color: var(--green); }
+
+  .dash-main { padding: 2rem; overflow-y: auto; }
+  .dash-header { margin-bottom: 2rem; }
+  .dash-header h2 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
+  .dash-header p { color: var(--text2); font-size: 0.9rem; margin-top: 0.25rem; }
+  .match-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2.5rem; }
+  .action-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+  .action-card::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.2s; }
+  .action-card.primary::before { background: radial-gradient(circle at top left, rgba(0,255,136,0.08), transparent 60%); }
+  .action-card.blue-card::before { background: radial-gradient(circle at top left, rgba(77,159,255,0.08), transparent 60%); }
+  .action-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .action-card:hover::before { opacity: 1; }
+  .action-card.primary:hover { border-color: rgba(0,255,136,0.3); }
+  .action-card.blue-card:hover { border-color: rgba(77,159,255,0.3); }
+  .ac-icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
+  .ac-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .ac-desc { font-size: 0.82rem; color: var(--text2); line-height: 1.5; }
+  .section-title { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); font-weight: 600; margin-bottom: 1rem; }
+  .recent-matches { display: flex; flex-direction: column; gap: 0.6rem; }
+  .match-row { display: flex; align-items: center; gap: 1rem; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.9rem 1.25rem; }
+  .match-result { font-size: 0.78rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px; font-family: var(--mono); }
+  .win { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.2); }
+  .loss { background: rgba(255,77,106,0.1); color: var(--red); border: 1px solid rgba(255,77,106,0.2); }
+  .match-vs { flex: 1; font-size: 0.88rem; }
+  .match-vs .opponent { font-weight: 700; }
+  .match-meta { font-size: 0.78rem; color: var(--text2); font-family: var(--mono); }
+  .elo-change { font-size: 0.82rem; font-family: var(--mono); font-weight: 600; }
+  .elo-change.pos { color: var(--green); }
+  .elo-change.neg { color: var(--red); }
+
+  /* ===== MATCHMAKING ===== */
+  #matchmaking { background: var(--bg); align-items: center; justify-content: center; }
+  .mm-container { text-align: center; max-width: 480px; padding: 2rem; }
+  .mm-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .mm-sub { color: var(--text2); margin-bottom: 2.5rem; }
+  .mm-pulse { width: 120px; height: 120px; border-radius: 50%; background: rgba(0,255,136,0.05); border: 2px solid rgba(0,255,136,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; position: relative; animation: pulse-ring 2s ease-in-out infinite; }
+  .mm-pulse::before, .mm-pulse::after { content: ''; position: absolute; border-radius: 50%; border: 1px solid rgba(0,255,136,0.15); animation: ripple 2s ease-out infinite; }
+  .mm-pulse::before { width: 150px; height: 150px; animation-delay: 0.5s; }
+  .mm-pulse::after { width: 180px; height: 180px; animation-delay: 1s; }
+  @keyframes pulse-ring { 0%,100%{border-color:rgba(0,255,136,0.2)} 50%{border-color:rgba(0,255,136,0.5)} }
+  @keyframes ripple { 0%{opacity:1;transform:scale(0.8)} 100%{opacity:0;transform:scale(1.2)} }
+  .mm-icon { font-size: 2.5rem; }
+  .mm-status { font-family: var(--mono); font-size: 0.85rem; color: var(--text2); margin-bottom: 0.75rem; }
+  .mm-timer { font-family: var(--mono); font-size: 2.5rem; font-weight: 600; color: var(--green); margin-bottom: 2rem; }
+  .dots::after { content: ''; animation: dots 1.5s infinite; }
+  @keyframes dots { 0%{content:'.'} 33%{content:'..'} 66%{content:'...'} }
+
+  /* ===== FOUND SCREEN ===== */
+  #match-found { background: var(--bg); align-items: center; justify-content: center; }
+  .mf-container { text-align: center; max-width: 500px; padding: 2rem; }
+  .mf-title { font-size: 2rem; font-weight: 800; color: var(--green); margin-bottom: 0.5rem; }
+  .vs-row { display: flex; align-items: center; justify-content: center; gap: 2rem; margin: 2.5rem 0; }
+  .player-card { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+  .player-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--bg3); border: 2.5px solid; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 800; }
+  .player-avatar.you { border-color: var(--green); color: var(--green); }
+  .player-avatar.opp { border-color: var(--blue); color: var(--blue); }
+  .player-name { font-weight: 700; font-size: 0.95rem; }
+  .player-elo { font-family: var(--mono); font-size: 0.8rem; color: var(--text2); }
+  .vs-badge { font-size: 1.4rem; font-weight: 800; color: var(--text3); }
+  .mf-problem { background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 2rem; text-align: left; }
+  .mf-problem-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); margin-bottom: 0.4rem; }
+  .mf-problem-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
+  .mf-problem-meta { display: flex; gap: 0.75rem; }
+  .diff-badge { font-size: 0.72rem; font-family: var(--mono); padding: 0.15rem 0.6rem; border-radius: 999px; font-weight: 600; }
+  .diff-easy { background: rgba(0,255,136,0.1); color: var(--green); }
+  .diff-medium { background: rgba(255,217,61,0.1); color: var(--yellow); }
+  .diff-hard { background: rgba(255,77,106,0.1); color: var(--red); }
+  .countdown { font-family: var(--mono); font-size: 3rem; font-weight: 800; color: var(--green); margin-bottom: 1rem; }
+
+  /* ===== MATCH ARENA ===== */
+  #arena { background: var(--bg); flex-direction: column; }
+  .arena-nav { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; border-bottom: 1px solid var(--border); background: var(--bg2); }
+  .arena-info { display: flex; align-items: center; gap: 1rem; }
+  .arena-timer { font-family: var(--mono); font-size: 1.1rem; font-weight: 600; color: var(--yellow); background: rgba(255,217,61,0.08); padding: 0.3rem 0.85rem; border-radius: 8px; border: 1px solid rgba(255,217,61,0.2); }
+  .arena-vs { display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; }
+  .arena-player { display: flex; align-items: center; gap: 0.5rem; }
+  .arena-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--bg3); border: 1.5px solid; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; }
+  .arena-avatar.you2 { border-color: var(--green); color: var(--green); }
+  .arena-avatar.opp2 { border-color: var(--blue); color: var(--blue); }
+  .arena-player-name { font-weight: 600; font-size: 0.85rem; }
+  .opp-status { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--text2); font-family: var(--mono); }
+  .opp-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .arena-body { flex: 1; display: grid; grid-template-columns: 400px 1fr; min-height: 0; overflow: hidden; }
+  .problem-panel { background: var(--bg2); border-right: 1px solid var(--border); padding: 1.5rem; overflow-y: auto; }
+  .problem-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.75rem; }
+  .problem-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .tag { font-size: 0.72rem; background: var(--bg3); border: 1px solid var(--border2); padding: 0.2rem 0.6rem; border-radius: 999px; color: var(--text2); font-family: var(--mono); }
+  .problem-desc { font-size: 0.88rem; color: var(--text2); line-height: 1.75; margin-bottom: 1.5rem; }
+  .problem-section { margin-bottom: 1.25rem; }
+  .problem-section-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); margin-bottom: 0.6rem; }
+  .example-block { background: var(--bg3); border-radius: 8px; padding: 0.85rem 1rem; font-family: var(--mono); font-size: 0.8rem; line-height: 1.6; border-left: 3px solid var(--border2); }
+  .example-block .label { color: var(--text3); font-size: 0.72rem; margin-bottom: 0.25rem; }
+  .example-block .val { color: var(--text); }
+
+  .editor-panel { display: flex; flex-direction: column; background: var(--bg); }
+  .editor-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); background: var(--bg2); }
+  .lang-select { background: var(--bg3); border: 1px solid var(--border2); color: var(--text); padding: 0.3rem 0.7rem; border-radius: 6px; font-family: var(--mono); font-size: 0.82rem; cursor: pointer; outline: none; }
+  .editor-area { flex: 1; position: relative; }
+  .code-editor { width: 100%; height: 100%; background: var(--bg); color: #abb2bf; font-family: var(--mono); font-size: 0.88rem; line-height: 1.65; padding: 1.25rem; border: none; resize: none; outline: none; min-height: 400px; tab-size: 2; }
+  .editor-footer { padding: 0.75rem 1rem; border-top: 1px solid var(--border); background: var(--bg2); display: flex; gap: 0.75rem; align-items: center; }
+  .output-panel { border-top: 1px solid var(--border); background: var(--bg2); padding: 0; max-height: 200px; overflow-y: auto; display: none; }
+  .output-panel.show { display: block; }
+  .output-header { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); }
+  .output-title { font-size: 0.8rem; font-weight: 600; font-family: var(--mono); }
+  .output-content { padding: 0.85rem 1rem; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; }
+  .test-cases { display: flex; gap: 0.5rem; flex-wrap: wrap; padding: 0.5rem 1rem; border-bottom: 1px solid var(--border); }
+  .tc { padding: 0.25rem 0.75rem; border-radius: 6px; font-family: var(--mono); font-size: 0.75rem; cursor: pointer; border: 1px solid var(--border2); background: var(--bg3); transition: all 0.15s; }
+  .tc.pass { border-color: rgba(0,255,136,0.3); background: rgba(0,255,136,0.08); color: var(--green); }
+  .tc.fail { border-color: rgba(255,77,106,0.3); background: rgba(255,77,106,0.08); color: var(--red); }
+  .tc.running { border-color: rgba(255,217,61,0.3); background: rgba(255,217,61,0.08); color: var(--yellow); animation: pulse2 1s ease-in-out infinite; }
+  @keyframes pulse2 { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  .submit-btn { background: var(--green); color: #0a0e1a; font-family: var(--display); font-weight: 700; font-size: 0.9rem; padding: 0.55rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; transition: all 0.15s; }
+  .submit-btn:hover { background: var(--green2); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .run-btn { background: transparent; color: var(--text2); font-family: var(--display); font-weight: 600; font-size: 0.85rem; padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border2); cursor: pointer; transition: all 0.15s; }
+  .run-btn:hover { color: var(--text); border-color: var(--border2); }
+
+  /* ===== RESULT SCREEN ===== */
+  #result { background: var(--bg); align-items: center; justify-content: center; }
+  .result-container { text-align: center; max-width: 520px; padding: 2rem; }
+  .result-icon { font-size: 4rem; margin-bottom: 1rem; }
+  .result-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .result-title.won { color: var(--green); }
+  .result-title.lost { color: var(--red); }
+  .result-sub { color: var(--text2); margin-bottom: 2rem; }
+  .result-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .rs-item { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+  .rs-val { font-size: 1.6rem; font-weight: 800; font-family: var(--mono); }
+  .rs-key { font-size: 0.72rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.2rem; }
+  .elo-change-big { font-size: 1.8rem; font-weight: 800; font-family: var(--mono); }
+  .elo-change-big.pos { color: var(--green); }
+  .elo-change-big.neg { color: var(--red); }
+  .result-actions { display: flex; gap: 1rem; justify-content: center; }
+
+  /* ===== INVITE SCREEN ===== */
+  #invite-screen { background: var(--bg); align-items: center; justify-content: center; }
+  .invite-container { max-width: 460px; padding: 2rem; width: 100%; }
+  .invite-container h2 { font-size: 1.7rem; font-weight: 800; margin-bottom: 0.4rem; }
+  .invite-container .sub { color: var(--text2); margin-bottom: 2rem; }
+  .invite-link-box { background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 0.85rem 1rem; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .invite-link { flex: 1; font-family: var(--mono); font-size: 0.82rem; color: var(--green); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .copy-btn { background: var(--bg3); border: 1px solid var(--border2); color: var(--text2); padding: 0.35rem 0.9rem; border-radius: 6px; font-size: 0.8rem; cursor: pointer; white-space: nowrap; transition: all 0.15s; font-family: var(--display); }
+  .copy-btn:hover { color: var(--text); }
+  .copy-btn.copied { color: var(--green); border-color: rgba(0,255,136,0.3); }
+  .waiting-indicator { display: flex; align-items: center; gap: 0.75rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+  .wi-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); animation: blink 1.2s infinite; }
+  .wi-text { font-size: 0.88rem; color: var(--text2); }
+
+  /* ===== TOAST ===== */
+  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 0.85rem 1.25rem; font-size: 0.88rem; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.3s; max-width: 300px; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-color: rgba(0,255,136,0.3); }
+  .toast.error { border-color: rgba(255,77,106,0.3); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* Opponent typing indicator */
+  .typing-bar { background: rgba(77,159,255,0.05); border-bottom: 1px solid var(--border); padding: 0.3rem 1rem; font-size: 0.75rem; color: var(--blue); font-family: var(--mono); display: flex; align-items: center; gap: 0.4rem; }
+  .typing-dots span { display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--blue); animation: td 1s infinite; margin: 0 1px; }
+  .typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes td { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-4px)} }
+
+  @media (max-width: 900px) {
+    .dash-body { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .arena-body { grid-template-columns: 1fr; }
+    .problem-panel { max-height: 220px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== LANDING ===== -->
+<div id="landing" class="screen active">
+  <nav>
+    <div class="logo">Code<span>Duel</span></div>
+    <div class="nav-links">
+      <button class="btn btn-ghost" onclick="showModal('login')">Log in</button>
+      <button class="btn btn-primary" onclick="showModal('register')">Sign up free</button>
+    </div>
+  </nav>
+  <div class="hero">
+    <div class="hero-tag">⚡ Real-time 1v1 Coding Battles</div>
+    <h1>Code fast.<br><span class="accent">Win faster.</span></h1>
+    <p>Challenge developers worldwide to head-to-head programming duels. Climb the leaderboard. Prove your skills.</p>
+    <div class="hero-ctas">
+      <button class="btn btn-primary btn-lg" onclick="showModal('register')">Start Dueling →</button>
+      <button class="btn btn-outline btn-lg" onclick="showModal('login')">I have an account</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num" id="stat-users">12,847</div><div class="stat-label">Active Coders</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-matches">94,213</div><div class="stat-label">Matches Played</div></div>
+      <div class="stat-item"><div class="stat-num">< 30s</div><div class="stat-label">Avg Match Queue</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div id="dashboard" class="screen">
+  <nav>
+    <div class="logo">Code<span>Duel</span></div>
+    <div class="nav-links">
+      <button class="btn btn-ghost" onclick="showScreen('invite-screen')">🔗 Invite Friend</button>
+    </div>
+    <div class="nav-user">
+      <span class="elo-badge" id="nav-elo">⚡ 1200</span>
+      <div class="avatar" id="nav-avatar">JD</div>
+    </div>
+  </nav>
+  <div class="dash-body">
+    <aside class="sidebar">
+      <div class="profile-card">
+        <div class="profile-avatar-lg" id="sidebar-avatar">JD</div>
+        <div class="profile-name" id="sidebar-name">JohnDoe</div>
+        <div class="profile-handle" id="sidebar-handle">@johndoe</div>
+        <div class="elo-display" id="sidebar-elo">⚡ 1200</div>
+        <div class="profile-stats">
+          <div class="ps-item"><div class="ps-val" id="stat-wins">24</div><div class="ps-key">Wins</div></div>
+          <div class="ps-item"><div class="ps-val" id="stat-losses">11</div><div class="ps-key">Losses</div></div>
+          <div class="ps-item"><div class="ps-val" id="stat-streak">3🔥</div><div class="ps-key">Streak</div></div>
+          <div class="ps-item"><div class="ps-val" id="stat-rank">#142</div><div class="ps-key">Rank</div></div>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Top Coders</div>
+        <div class="leaderboard-list">
+          <div class="lb-item"><span class="lb-rank gold">1</span><span class="lb-name">v1perX</span><span class="lb-elo">2847</span></div>
+          <div class="lb-item"><span class="lb-rank gold">2</span><span class="lb-name">neo_algo</span><span class="lb-elo">2791</span></div>
+          <div class="lb-item"><span class="lb-rank gold">3</span><span class="lb-name">codeStorm</span><span class="lb-elo">2634</span></div>
+          <div class="lb-item"><span class="lb-rank">4</span><span class="lb-name">null_ptr</span><span class="lb-elo">2580</span></div>
+          <div class="lb-item"><span class="lb-rank">5</span><span class="lb-name">byteforce</span><span class="lb-elo">2511</span></div>
+        </div>
+      </div>
+    </aside>
+    <main class="dash-main">
+      <div class="dash-header">
+        <h2>Welcome back, <span id="dash-name" style="color:var(--green)">Coder</span> 👋</h2>
+        <p>Ready for your next duel?</p>
+      </div>
+      <div class="match-actions">
+        <div class="action-card primary" onclick="startMatchmaking()">
+          <div class="ac-icon">⚔️</div>
+          <div class="ac-title">Quick Match</div>
+          <div class="ac-desc">Get matched with a player at your skill level instantly.</div>
+        </div>
+        <div class="action-card blue-card" onclick="showScreen('invite-screen')">
+          <div class="ac-icon">🔗</div>
+          <div class="ac-title">Challenge Friend</div>
+          <div class="ac-desc">Send an invite link to challenge someone specific.</div>
+        </div>
+        <div class="action-card" onclick="showToast('Practice mode coming in Phase 2!', 'success')">
+          <div class="ac-icon">🎯</div>
+          <div class="ac-title">Practice Mode</div>
+          <div class="ac-desc">Solve problems without affecting your ELO rating.</div>
+        </div>
+      </div>
+      <div class="section-title">Recent Matches</div>
+      <div class="recent-matches" id="recent-matches"></div>
+    </main>
+  </div>
+</div>
+
+<!-- ===== MATCHMAKING ===== -->
+<div id="matchmaking" class="screen">
+  <div class="mm-container">
+    <div class="mm-title">Finding Opponent</div>
+    <div class="mm-sub">Searching for a player around your skill level</div>
+    <div class="mm-pulse"><div class="mm-icon">⚔️</div></div>
+    <div class="mm-status">Players online: <span style="color:var(--green);font-weight:600" id="mm-online">247</span> &nbsp;|&nbsp; Queue: <span id="mm-queue">12</span></div>
+    <div class="mm-timer" id="mm-timer">00:00</div>
+    <button class="btn btn-outline" onclick="cancelMatchmaking()">Cancel</button>
+  </div>
+</div>
+
+<!-- ===== MATCH FOUND ===== -->
+<div id="match-found" class="screen">
+  <div class="mf-container">
+    <div class="mf-title">Match Found!</div>
+    <div style="color:var(--text2);margin-bottom:0.5rem">Get ready to duel</div>
+    <div class="vs-row">
+      <div class="player-card">
+        <div class="player-avatar you" id="mf-you-avatar">JD</div>
+        <div class="player-name" id="mf-you-name">You</div>
+        <div class="player-elo" id="mf-you-elo">⚡ 1200</div>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="player-card">
+        <div class="player-avatar opp" id="mf-opp-avatar">??</div>
+        <div class="player-name" id="mf-opp-name">Finding...</div>
+        <div class="player-elo" id="mf-opp-elo">⚡ —</div>
+      </div>
+    </div>
+    <div class="mf-problem" id="mf-problem-info">
+      <div class="mf-problem-label">Today's Problem</div>
+      <div class="mf-problem-title" id="mf-prob-title">—</div>
+      <div class="mf-problem-meta">
+        <span class="diff-badge" id="mf-prob-diff">—</span>
+        <span style="font-size:0.78rem;color:var(--text2);font-family:var(--mono)" id="mf-prob-lang">—</span>
+      </div>
+    </div>
+    <div class="countdown" id="mf-countdown">3</div>
+    <div style="color:var(--text2);font-size:0.85rem">Match starts automatically</div>
+  </div>
+</div>
+
+<!-- ===== ARENA ===== -->
+<div id="arena" class="screen">
+  <div class="arena-nav">
+    <div class="arena-info">
+      <div class="logo" style="font-size:1rem">Code<span style="color:var(--green)">Duel</span></div>
+      <div class="arena-timer" id="arena-timer">15:00</div>
+    </div>
+    <div class="arena-vs">
+      <div class="arena-player">
+        <div class="arena-avatar you2" id="arena-you-avatar">JD</div>
+        <span class="arena-player-name" id="arena-you-name">You</span>
+      </div>
+      <span style="color:var(--text3);font-size:0.8rem;font-weight:700">VS</span>
+      <div class="arena-player">
+        <div class="arena-avatar opp2" id="arena-opp-avatar">OP</div>
+        <span class="arena-player-name" id="arena-opp-name">Opponent</span>
+        <div class="opp-status"><div class="opp-dot"></div><span id="opp-status-text">coding</span></div>
+      </div>
+    </div>
+    <button class="btn btn-danger" style="font-size:0.8rem;padding:0.4rem 0.9rem" onclick="forfeitMatch()">Forfeit</button>
+  </div>
+  <div class="typing-bar" id="typing-bar" style="display:none">
+    <div class="typing-dots"><span></span><span></span><span></span></div>
+    <span id="typing-text">Opponent is typing...</span>
+  </div>
+  <div class="arena-body">
+    <div class="problem-panel">
+      <div class="problem-tags" id="problem-tags"></div>
+      <div class="problem-title" id="problem-title">—</div>
+      <div class="problem-desc" id="problem-desc">—</div>
+      <div class="problem-section">
+        <div class="problem-section-title">Example 1</div>
+        <div class="example-block" id="example1"></div>
+      </div>
+      <div class="problem-section">
+        <div class="problem-section-title">Constraints</div>
+        <div class="example-block" id="constraints" style="color:var(--text2)"></div>
+      </div>
+    </div>
+    <div class="editor-panel">
+      <div class="editor-toolbar">
+        <select class="lang-select" id="lang-select" onchange="changeLang(this.value)">
+          <option value="python">Python</option>
+          <option value="javascript">JavaScript</option>
+          <option value="java">Java</option>
+          <option value="cpp">C++</option>
+        </select>
+        <div style="display:flex;gap:0.5rem;align-items:center">
+          <span style="font-size:0.75rem;color:var(--text3);font-family:var(--mono)" id="editor-status">Ready</span>
+        </div>
+      </div>
+      <div class="editor-area">
+        <textarea class="code-editor" id="code-editor" spellcheck="false" oninput="onEditorInput()"></textarea>
+      </div>
+      <div class="output-panel" id="output-panel">
+        <div class="output-header">
+          <span class="output-title" id="output-title">Test Results</span>
+          <button class="btn-ghost" style="font-size:0.75rem;padding:0.2rem 0.5rem" onclick="document.getElementById('output-panel').classList.remove('show')">✕</button>
+        </div>
+        <div class="test-cases" id="test-cases"></div>
+        <div class="output-content" id="output-content"></div>
+      </div>
+      <div class="editor-footer">
+        <button class="run-btn" onclick="runCode()" id="run-btn">▶ Run Tests</button>
+        <div style="flex:1"></div>
+        <button class="submit-btn" onclick="submitCode()" id="submit-btn">Submit Solution</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RESULT ===== -->
+<div id="result" class="screen">
+  <div class="result-container">
+    <div class="result-icon" id="result-icon">🏆</div>
+    <div class="result-title" id="result-title">Victory!</div>
+    <div class="result-sub" id="result-sub">You solved it first!</div>
+    <div class="result-stats">
+      <div class="rs-item">
+        <div class="rs-val" id="r-time">4:32</div>
+        <div class="rs-key">Your Time</div>
+      </div>
+      <div class="rs-item">
+        <div class="rs-val elo-change-big" id="r-elo">+24</div>
+        <div class="rs-key">ELO Change</div>
+      </div>
+      <div class="rs-item">
+        <div class="rs-val" id="r-opp-time">—</div>
+        <div class="rs-key">Opp Time</div>
+      </div>
+    </div>
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="startMatchmaking()">Rematch</button>
+      <button class="btn btn-outline" onclick="goToDashboard()">Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== INVITE ===== -->
+<div id="invite-screen" class="screen">
+  <nav>
+    <div class="logo">Code<span>Duel</span></div>
+    <button class="btn btn-ghost" onclick="goToDashboard()">← Back</button>
+  </nav>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center">
+    <div class="invite-container">
+      <h2>Challenge a Friend</h2>
+      <p class="sub">Share this link — they'll be dropped straight into a match with you.</p>
+      <div class="invite-link-box">
+        <span class="invite-link" id="invite-link">https://codeduel.gg/match/abc123xyz</span>
+        <button class="copy-btn" id="copy-btn" onclick="copyInvite()">Copy</button>
+      </div>
+      <div class="waiting-indicator">
+        <div class="wi-dot"></div>
+        <div class="wi-text">Waiting for opponent to join<span class="dots"></span></div>
+      </div>
+      <div style="text-align:center;margin-top:1.5rem">
+        <p style="font-size:0.8rem;color:var(--text3);margin-bottom:1rem">Or simulate — pretend a friend joined:</p>
+        <button class="btn btn-outline" onclick="simulateFriendJoin()">Simulate Friend Joining →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AUTH MODALS ===== -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="login-form">
+      <h2>Welcome back</h2>
+      <p class="sub">Log in to your CodeDuel account</p>
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" value="demo@codeduel.gg"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••" value="password123"></div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="doLogin()">Log In</button>
+        <div class="modal-switch">Don't have an account? <a onclick="switchModal('register')">Sign up</a></div>
+      </div>
+    </div>
+    <div id="register-form" style="display:none">
+      <h2>Create account</h2>
+      <p class="sub">Join CodeDuel and start dueling</p>
+      <div class="form-group"><label>Username</label><input type="text" id="reg-username" placeholder="coolcoder42"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="you@example.com"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="reg-pass" placeholder="Min 8 characters"></div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="doRegister()">Create Account</button>
+        <div class="modal-switch">Already have an account? <a onclick="switchModal('login')">Log in</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== STATE =====
+const STATE = {
+  user: null,
+  currentMatch: null,
+  matchTimer: null,
+  mmTimer: null,
+  mmSeconds: 0,
+  arenaSeconds: 900,
+  oppTypingTimer: null,
+  eloHistory: [1200],
+};
+
+const PROBLEMS = [
+  {
+    id: 1, title: "Two Sum", difficulty: "easy",
+    tags: ["Array", "Hash Map"],
+    desc: "Given an array of integers <code style='color:var(--green);background:var(--bg3);padding:0 4px;border-radius:4px'>nums</code> and an integer <code style='color:var(--green);background:var(--bg3);padding:0 4px;border-radius:4px'>target</code>, return indices of the two numbers such that they add up to <code style='color:var(--green);background:var(--bg3);padding:0 4px;border-radius:4px'>target</code>.\n\nYou may assume that each input would have exactly one solution, and you may not use the same element twice.",
+    example: { input: "nums = [2,7,11,15], target = 9", output: "[0,1]", explain: "nums[0] + nums[1] == 9" },
+    constraints: "2 ≤ nums.length ≤ 10⁴\n-10⁹ ≤ nums[i] ≤ 10⁹\n-10⁹ ≤ target ≤ 10⁹\nOnly one valid answer exists.",
+    starters: {
+      python: "def twoSum(nums, target):\n    # Your solution here\n    pass\n",
+      javascript: "var twoSum = function(nums, target) {\n    // Your solution here\n};\n",
+      java: "class Solution {\n    public int[] twoSum(int[] nums, int target) {\n        // Your solution here\n    }\n}\n",
+      cpp: "class Solution {\npublic:\n    vector<int> twoSum(vector<int>& nums, int target) {\n        // Your solution here\n    }\n};\n"
+    }
+  },
+  {
+    id: 2, title: "Valid Parentheses", difficulty: "easy",
+    tags: ["Stack", "String"],
+    desc: "Given a string <code style='color:var(--green);background:var(--bg3);padding:0 4px;border-radius:4px'>s</code> containing just the characters <code style='color:var(--green);background:var(--bg3);padding:0 4px;border-radius:4px'>'('</code>, <code style='color:var(--green);background:var(--bg3);padding:0 4px;border-radius:4px'>')'</code>, <code style='color:var(--green);background:var(--bg3);padding:0 4px;border-radius:4px'>'{'</code>, <code style='color:var(--green);background:var(--bg3);padding:0 4px;border-radius:4px'>'}'</code>, <code style='color:var(--green);background:var(--bg3);padding:0 4px;border-radius:4px'>'['</code> and <code style='color:var(--green);background:var(--bg3);padding:0 4px;border-radius:4px'>']'</code>, determine if the input string is valid.\n\nAn input string is valid if: open brackets must be closed by the same type, and in the correct order.",
+    example: { input: 's = "()[]{}"', output: "true", explain: "All brackets are properly matched." },
+    constraints: "1 ≤ s.length ≤ 10⁴\ns consists of parentheses only '()[]{}'",
+    starters: {
+      python: "def isValid(s):\n    # Your solution here\n    pass\n",
+      javascript: "var isValid = function(s) {\n    // Your solution here\n};\n",
+      java: "class Solution {\n    public boolean isValid(String s) {\n        // Your solution here\n    }\n}\n",
+      cpp: "class Solution {\npublic:\n    bool isValid(string s) {\n        // Your solution here\n    }\n};\n"
+    }
+  },
+  {
+    id: 3, title: "Longest Common Prefix", difficulty: "easy",
+    tags: ["String", "Trie"],
+    desc: "Write a function to find the longest common prefix string amongst an array of strings.\n\nIf there is no common prefix, return an empty string <code style='color:var(--green);background:var(--bg3);padding:0 4px;border-radius:4px'>\"\"</code>.",
+    example: { input: 'strs = ["flower","flow","flight"]', output: '"fl"', explain: "All strings share the prefix 'fl'." },
+    constraints: "1 ≤ strs.length ≤ 200\n0 ≤ strs[i].length ≤ 200\nstrs[i] consists of only lowercase English letters.",
+    starters: {
+      python: "def longestCommonPrefix(strs):\n    # Your solution here\n    pass\n",
+      javascript: "var longestCommonPrefix = function(strs) {\n    // Your solution here\n};\n",
+      java: "class Solution {\n    public String longestCommonPrefix(String[] strs) {\n        // Your solution here\n    }\n}\n",
+      cpp: "class Solution {\npublic:\n    string longestCommonPrefix(vector<string>& strs) {\n        // Your solution here\n    }\n};\n"
+    }
+  },
+  {
+    id: 4, title: "Maximum Subarray", difficulty: "medium",
+    tags: ["Array", "DP", "Divide & Conquer"],
+    desc: "Given an integer array <code style='color:var(--green);background:var(--bg3);padding:0 4px;border-radius:4px'>nums</code>, find the subarray with the largest sum, and return its sum.",
+    example: { input: "nums = [-2,1,-3,4,-1,2,1,-5,4]", output: "6", explain: "Subarray [4,-1,2,1] has the largest sum = 6." },
+    constraints: "1 ≤ nums.length ≤ 10⁵\n-10⁴ ≤ nums[i] ≤ 10⁴",
+    starters: {
+      python: "def maxSubArray(nums):\n    # Your solution here\n    pass\n",
+      javascript: "var maxSubArray = function(nums) {\n    // Your solution here\n};\n",
+      java: "class Solution {\n    public int maxSubArray(int[] nums) {\n        // Your solution here\n    }\n}\n",
+      cpp: "class Solution {\npublic:\n    int maxSubArray(vector<int>& nums) {\n        // Your solution here\n    }\n};\n"
+    }
+  }
+];
+
+const OPPONENTS = [
+  { name: "neo_algo", handle: "@neo_algo", elo: 1185, initials: "NA" },
+  { name: "byteforce", handle: "@byteforce", elo: 1220, initials: "BF" },
+  { name: "codeStorm", handle: "@codestorm", elo: 1175, initials: "CS" },
+  { name: "null_ptr", handle: "@null_ptr", elo: 1240, initials: "NP" },
+  { name: "v1perX", handle: "@v1perx", elo: 1195, initials: "VX" },
+];
+
+const RECENT_MATCHES_DATA = [
+  { result: "win", opponent: "null_ptr", problem: "Binary Search", time: "3:12", eloChange: +18 },
+  { result: "win", opponent: "byteforce", problem: "Two Sum", time: "2:48", eloChange: +22 },
+  { result: "loss", opponent: "codeStorm", problem: "LRU Cache", time: "DNF", eloChange: -16 },
+  { result: "win", opponent: "v1perX", problem: "Valid Parentheses", time: "1:55", eloChange: +15 },
+];
+
+// ===== SCREEN MANAGEMENT =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ===== AUTH =====
+function showModal(type) {
+  document.getElementById('auth-modal').classList.add('open');
+  switchModal(type);
+}
+function closeModal() {
+  document.getElementById('auth-modal').classList.remove('open');
+}
+function switchModal(type) {
+  document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none';
+  document.getElementById('register-form').style.display = type === 'register' ? 'block' : 'none';
+}
+
+function doLogin() {
+  const email = document.getElementById('login-email').value;
+  if (!email) { showToast('Please enter your email', 'error'); return; }
+  const username = email.split('@')[0].replace(/[^a-zA-Z0-9]/g,'');
+  loginUser({ username, email, elo: 1200, wins: 24, losses: 11, streak: 3 });
+}
+
+function doRegister() {
+  const username = document.getElementById('reg-username').value;
+  const email = document.getElementById('reg-email').value;
+  const pass = document.getElementById('reg-pass').value;
+  if (!username || !email || !pass) { showToast('Please fill in all fields', 'error'); return; }
+  if (pass.length < 8) { showToast('Password must be at least 8 characters', 'error'); return; }
+  loginUser({ username, email, elo: 1200, wins: 0, losses: 0, streak: 0 });
+}
+
+function loginUser(user) {
+  STATE.user = user;
+  closeModal();
+  populateDashboard();
+  showScreen('dashboard');
+  showToast(`Welcome, ${user.username}! 🎉`, 'success');
+}
+
+// ===== DASHBOARD =====
+function populateDashboard() {
+  const u = STATE.user;
+  const initials = u.username.slice(0,2).toUpperCase();
+  document.getElementById('nav-avatar').textContent = initials;
+  document.getElementById('nav-elo').textContent = `⚡ ${u.elo}`;
+  document.getElementById('sidebar-avatar').textContent = initials;
+  document.getElementById('sidebar-name').textContent = u.username;
+  document.getElementById('sidebar-handle').textContent = `@${u.username.toLowerCase()}`;
+  document.getElementById('sidebar-elo').textContent = `⚡ ${u.elo}`;
+  document.getElementById('dash-name').textContent = u.username;
+  document.getElementById('stat-wins').textContent = u.wins;
+  document.getElementById('stat-losses').textContent = u.losses;
+  document.getElementById('stat-streak').textContent = u.streak + (u.streak >= 3 ? '🔥' : '');
+  document.getElementById('stat-rank').textContent = '#' + (Math.floor(Math.random() * 200) + 100);
+  renderRecentMatches();
+}
+
+function renderRecentMatches() {
+  const el = document.getElementById('recent-matches');
+  el.innerHTML = RECENT_MATCHES_DATA.map(m => `
+    <div class="match-row">
+      <span class="match-result ${m.result}">${m.result.toUpperCase()}</span>
+      <div class="match-vs">vs <span class="opponent">${m.opponent}</span> &mdash; <span style="color:var(--text2);font-size:0.82rem">${m.problem}</span></div>
+      <span class="match-meta">${m.time}</span>
+      <span class="elo-change ${m.eloChange > 0 ? 'pos' : 'neg'}">${m.eloChange > 0 ? '+' : ''}${m.eloChange}</span>
+    </div>
+  `).join('');
+}
+
+function goToDashboard() {
+  clearTimers();
+  showScreen('dashboard');
+}
+
+// ===== MATCHMAKING =====
+let mmInterval;
+function startMatchmaking() {
+  showScreen('matchmaking');
+  STATE.mmSeconds = 0;
+  updateMMTimer();
+  mmInterval = setInterval(() => {
+    STATE.mmSeconds++;
+    updateMMTimer();
+    document.getElementById('mm-online').textContent = 247 + Math.floor(Math.random() * 20 - 10);
+    document.getElementById('mm-queue').textContent = 8 + Math.floor(Math.random() * 8);
+    if (STATE.mmSeconds >= 4 + Math.floor(Math.random() * 4)) {
+      clearInterval(mmInterval);
+      matchFound();
+    }
+  }, 1000);
+}
+
+function updateMMTimer() {
+  const s = STATE.mmSeconds;
+  document.getElementById('mm-timer').textContent = `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+}
+
+function cancelMatchmaking() {
+  clearInterval(mmInterval);
+  goToDashboard();
+}
+
+// ===== MATCH FOUND =====
+function matchFound() {
+  const opp = OPPONENTS[Math.floor(Math.random() * OPPONENTS.length)];
+  const prob = PROBLEMS[Math.floor(Math.random() * PROBLEMS.length)];
+  const u = STATE.user;
+
+  STATE.currentMatch = { opponent: opp, problem: prob, startTime: null };
+
+  document.getElementById('mf-you-avatar').textContent = u.username.slice(0,2).toUpperCase();
+  document.getElementById('mf-you-name').textContent = u.username;
+  document.getElementById('mf-you-elo').textContent = `⚡ ${u.elo}`;
+  document.getElementById('mf-opp-avatar').textContent = opp.initials;
+  document.getElementById('mf-opp-name').textContent = opp.name;
+  document.getElementById('mf-opp-elo').textContent = `⚡ ${opp.elo}`;
+  document.getElementById('mf-prob-title').textContent = prob.title;
+
+  const diffEl = document.getElementById('mf-prob-diff');
+  diffEl.textContent = prob.difficulty.charAt(0).toUpperCase() + prob.difficulty.slice(1);
+  diffEl.className = 'diff-badge diff-' + prob.difficulty;
+
+  document.getElementById('mf-prob-lang').textContent = 'Python · JS · Java · C++';
+
+  showScreen('match-found');
+
+  let count = 3;
+  document.getElementById('mf-countdown').textContent = count;
+  const cd = setInterval(() => {
+    count--;
+    if (count <= 0) { clearInterval(cd); startArena(); }
+    else document.getElementById('mf-countdown').textContent = count;
+  }, 1000);
+}
+
+// ===== ARENA =====
+function startArena() {
+  const m = STATE.currentMatch;
+  const u = STATE.user;
+  const prob = m.problem;
+
+  // populate arena
+  document.getElementById('arena-you-avatar').textContent = u.username.slice(0,2).toUpperCase();
+  document.getElementById('arena-you-name').textContent = u.username;
+  document.getElementById('arena-opp-avatar').textContent = m.opponent.initials;
+  document.getElementById('arena-opp-name').textContent = m.opponent.name;
+
+  const tagsEl = document.getElementById('problem-tags');
+  const diffBadge = `<span class="tag diff-${prob.difficulty}" style="border:none;background:${prob.difficulty==='easy'?'rgba(0,255,136,0.1)':prob.difficulty==='medium'?'rgba(255,217,61,0.1)':'rgba(255,77,106,0.1)'};color:${prob.difficulty==='easy'?'var(--green)':prob.difficulty==='medium'?'var(--yellow)':'var(--red)'}">${prob.difficulty.charAt(0).toUpperCase()+prob.difficulty.slice(1)}</span>`;
+  tagsEl.innerHTML = diffBadge + prob.tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+  document.getElementById('problem-title').textContent = prob.title;
+  document.getElementById('problem-desc').innerHTML = prob.desc.replace(/\n/g,'<br>');
+
+  const ex = prob.example;
+  document.getElementById('example1').innerHTML = `<div class="label">Input</div><div class="val">${ex.input}</div><div class="label" style="margin-top:8px">Output</div><div class="val">${ex.output}</div><div class="label" style="margin-top:8px">Explanation</div><div class="val" style="color:var(--text2)">${ex.explain}</div>`;
+  document.getElementById('constraints').innerHTML = prob.constraints.replace(/\n/g,'<br>');
+
+  document.getElementById('code-editor').value = prob.starters['python'];
+  document.getElementById('lang-select').value = 'python';
+  document.getElementById('output-panel').classList.remove('show');
+
+  STATE.arenaSeconds = 900;
+  STATE.currentMatch.startTime = Date.now();
+  updateArenaTimer();
+
+  STATE.matchTimer = setInterval(() => {
+    STATE.arenaSeconds--;
+    updateArenaTimer();
+    if (STATE.arenaSeconds <= 0) { clearInterval(STATE.matchTimer); endMatch(false, true); }
+  }, 1000);
+
+  // Simulate opponent behavior
+  simulateOpponent();
+
+  showScreen('arena');
+}
+
+function updateArenaTimer() {
+  const s = STATE.arenaSeconds;
+  const el = document.getElementById('arena-timer');
+  el.textContent = `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+  el.style.color = s < 60 ? 'var(--red)' : s < 180 ? 'var(--yellow)' : 'var(--yellow)';
+}
+
+const OPP_STATUSES = ['coding', 'thinking...', 'running tests', 'debugging', 'almost done?'];
+function simulateOpponent() {
+  let idx = 0;
+  const statusEl = document.getElementById('opp-status-text');
+  const typingBar = document.getElementById('typing-bar');
+  const typingText = document.getElementById('typing-text');
+  const m = STATE.currentMatch;
+
+  const oppTime = 120 + Math.floor(Math.random() * 480); // 2-10 min
+
+  const statusInterval = setInterval(() => {
+    idx = (idx + 1) % OPP_STATUSES.length;
+    statusEl.textContent = OPP_STATUSES[idx];
+
+    // random typing indicator
+    if (Math.random() > 0.6) {
+      typingBar.style.display = 'flex';
+      typingText.textContent = `${m.opponent.name} is typing...`;
+      setTimeout(() => typingBar.style.display = 'none', 2000 + Math.random() * 3000);
+    }
+  }, 8000 + Math.random() * 6000);
+
+  m.oppStatusInterval = statusInterval;
+
+  // opponent submits after oppTime seconds
+  m.oppTimeout = setTimeout(() => {
+    clearInterval(statusInterval);
+    statusEl.textContent = 'submitted!';
+    typingBar.style.display = 'none';
+    m.oppSolveTime = 900 - STATE.arenaSeconds;
+    if (!m.resolved) {
+      endMatch(false, false, true);
+    }
+  }, oppTime * 1000);
+}
+
+function changeLang(lang) {
+  const prob = STATE.currentMatch.problem;
+  if (prob && prob.starters[lang]) {
+    const editor = document.getElementById('code-editor');
+    if (editor.value.trim() === '' || editor.value === prob.starters[Object.keys(prob.starters).find(k => k !== lang)] || confirm('Change language? Your code will be replaced with the starter template.')) {
+      editor.value = prob.starters[lang];
+    }
+  }
+}
+
+function onEditorInput() {
+  document.getElementById('editor-status').textContent = 'Editing...';
+  clearTimeout(STATE.editTimeout);
+  STATE.editTimeout = setTimeout(() => {
+    document.getElementById('editor-status').textContent = 'Unsaved changes';
+  }, 1000);
+}
+
+function runCode() {
+  const code = document.getElementById('code-editor').value;
+  if (!code.trim() || code.includes('pass') || code.includes('// Your solution')) {
+    showToast('Write some code first!', 'error'); return;
+  }
+  const runBtn = document.getElementById('run-btn');
+  runBtn.disabled = true;
+  runBtn.textContent = '⟳ Running...';
+
+  const op = document.getElementById('output-panel');
+  op.classList.add('show');
+  document.getElementById('output-title').textContent = 'Running Test Cases...';
+
+  const tcEl = document.getElementById('test-cases');
+  tcEl.innerHTML = ['Case 1','Case 2','Case 3'].map((c,i) => `<span class="tc running" id="tc-${i}">${c}</span>`).join('');
+  document.getElementById('output-content').innerHTML = '<span style="color:var(--text2)">Executing on Piston API...</span>';
+
+  const allPass = Math.random() > 0.35;
+  const results = [true, allPass, allPass && Math.random() > 0.3];
+
+  results.forEach((pass, i) => {
+    setTimeout(() => {
+      const tc = document.getElementById(`tc-${i}`);
+      if (tc) tc.className = `tc ${pass ? 'pass' : 'fail'}`;
+    }, 600 + i * 400);
+  });
+
+  setTimeout(() => {
+    runBtn.disabled = false;
+    runBtn.textContent = '▶ Run Tests';
+    document.getElementById('output-title').textContent = `Test Results — ${results.filter(Boolean).length}/3 passed`;
+    const passed = results.filter(Boolean).length;
+    document.getElementById('output-content').innerHTML = passed === 3
+      ? `<span style="color:var(--green)">✓ All test cases passed!</span><br><span style="color:var(--text2);font-size:0.78rem">Runtime: ${12 + Math.floor(Math.random()*30)}ms &nbsp; Memory: ${14 + Math.floor(Math.random()*4)}.${Math.floor(Math.random()*9)}MB</span>`
+      : `<span style="color:var(--red)">✗ ${3-passed} test case(s) failed</span><br><span style="color:var(--text2);font-size:0.78rem">Expected: [0,1] &nbsp; Got: null</span>`;
+  }, 1800);
+}
+
+function submitCode() {
+  const code = document.getElementById('code-editor').value;
+  if (!code.trim() || code.includes('pass') || code.includes('// Your solution')) {
+    showToast('Write a solution before submitting!', 'error'); return;
+  }
+
+  const submitBtn = document.getElementById('submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+
+  const op = document.getElementById('output-panel');
+  op.classList.add('show');
+  document.getElementById('output-title').textContent = 'Validating All Test Cases...';
+
+  const tcEl = document.getElementById('test-cases');
+  tcEl.innerHTML = ['Case 1','Case 2','Case 3','Hidden 1','Hidden 2'].map((c,i) => `<span class="tc running" id="stc-${i}">${c}</span>`).join('');
+
+  for(let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      const el = document.getElementById(`stc-${i}`);
+      if (el) el.className = 'tc pass';
+    }, 400 + i * 300);
+  }
+
+  setTimeout(() => {
+    clearTimers();
+    const solveTime = Math.floor((Date.now() - STATE.currentMatch.startTime) / 1000);
+    STATE.currentMatch.resolved = true;
+    endMatch(true, false, false, solveTime);
+  }, 2200);
+}
+
+function forfeitMatch() {
+  if (!confirm('Forfeit this match? You will lose ELO.')) return;
+  clearTimers();
+  endMatch(false, false, false, null, true);
+}
+
+function clearTimers() {
+  clearInterval(STATE.matchTimer);
+  if (STATE.currentMatch) {
+    clearInterval(STATE.currentMatch.oppStatusInterval);
+    clearTimeout(STATE.currentMatch.oppTimeout);
+  }
+}
+
+function endMatch(won, timeout, oppWon, solveTime, forfeit) {
+  clearTimers();
+  STATE.currentMatch.resolved = true;
+
+  const eloChange = won ? Math.floor(15 + Math.random() * 15) : -(Math.floor(12 + Math.random() * 10));
+  STATE.user.elo += eloChange;
+  if (won) STATE.user.wins++;
+  else STATE.user.losses++;
+
+  document.getElementById('nav-elo').textContent = `⚡ ${STATE.user.elo}`;
+  document.getElementById('sidebar-elo').textContent = `⚡ ${STATE.user.elo}`;
+
+  const resultIcon = document.getElementById('result-icon');
+  const resultTitle = document.getElementById('result-title');
+  const resultSub = document.getElementById('result-sub');
+  const eloEl = document.getElementById('r-elo');
+
+  if (won) {
+    resultIcon.textContent = '🏆';
+    resultTitle.textContent = 'Victory!';
+    resultTitle.className = 'result-title won';
+    resultSub.textContent = 'You solved it first! Great work.';
+  } else if (forfeit) {
+    resultIcon.textContent = '🏳️';
+    resultTitle.textContent = 'Forfeited';
+    resultTitle.className = 'result-title lost';
+    resultSub.textContent = 'You forfeited the match.';
+  } else if (timeout) {
+    resultIcon.textContent = '⏰';
+    resultTitle.textContent = 'Time\'s Up';
+    resultTitle.className = 'result-title lost';
+    resultSub.textContent = 'Nobody solved it in time.';
+  } else {
+    resultIcon.textContent = '💀';
+    resultTitle.textContent = 'Defeated';
+    resultTitle.className = 'result-title lost';
+    resultSub.textContent = `${STATE.currentMatch.opponent.name} solved it first.`;
+  }
+
+  const displayTime = solveTime
+    ? `${Math.floor(solveTime/60)}:${String(solveTime%60).padStart(2,'0')}`
+    : (forfeit ? '—' : timeout ? 'DNF' : 'DNF');
+
+  document.getElementById('r-time').textContent = displayTime;
+  eloEl.textContent = (eloChange > 0 ? '+' : '') + eloChange;
+  eloEl.className = 'rs-val elo-change-big ' + (eloChange > 0 ? 'pos' : 'neg');
+
+  const oppSolve = STATE.currentMatch.oppSolveTime;
+  document.getElementById('r-opp-time').textContent = oppSolve
+    ? `${Math.floor(oppSolve/60)}:${String(oppSolve%60).padStart(2,'0')}`
+    : won ? '—' : (STATE.currentMatch.opponent.name[0] + '?');
+
+  // add to recent matches
+  RECENT_MATCHES_DATA.unshift({
+    result: won ? 'win' : 'loss',
+    opponent: STATE.currentMatch.opponent.name,
+    problem: STATE.currentMatch.problem.title,
+    time: displayTime,
+    eloChange
+  });
+  if (RECENT_MATCHES_DATA.length > 8) RECENT_MATCHES_DATA.pop();
+
+  showScreen('result');
+}
+
+// ===== INVITE =====
+function generateInviteLink() {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  const code = Array.from({length: 10}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+  return `https://codeduel.gg/match/${code}`;
+}
+
+function copyInvite() {
+  const link = document.getElementById('invite-link').textContent;
+  navigator.clipboard.writeText(link).catch(() => {});
+  const btn = document.getElementById('copy-btn');
+  btn.textContent = 'Copied!';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  showToast('Link copied to clipboard!', 'success');
+}
+
+function simulateFriendJoin() {
+  const opp = OPPONENTS[Math.floor(Math.random() * OPPONENTS.length)];
+  const prob = PROBLEMS[Math.floor(Math.random() * PROBLEMS.length)];
+  STATE.currentMatch = { opponent: opp, problem: prob };
+  showToast(`${opp.name} joined! Match starting...`, 'success');
+  setTimeout(matchFound, 800);
+}
+
+// ===== TOAST =====
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ===== LIVE STAT ANIMATION =====
+function animateStats() {
+  const userEl = document.getElementById('stat-users');
+  const matchEl = document.getElementById('stat-matches');
+  setInterval(() => {
+    const u = parseInt(userEl.textContent.replace(/,/g,''));
+    userEl.textContent = (u + Math.floor(Math.random()*3)).toLocaleString();
+    const m = parseInt(matchEl.textContent.replace(/,/g,''));
+    matchEl.textContent = (m + Math.floor(Math.random()*2)).toLocaleString();
+  }, 4000);
+}
+
+// Init invite link
+document.getElementById('invite-link').textContent = generateInviteLink();
+animateStats();
+</script>
+<script src="./test.js"></script>
+</body>
+
+</html>
